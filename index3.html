@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng điều khiển Tương tác về Tài chính Doanh nghiệp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Chosen Palette: Warm Harmony - #F5F5F5 (background), #333333 (text), #4A90E2 (primary), #F3A33A (accent), #50E3C2 (positive), #E35050 (negative) -->
+    <!-- Application Structure Plan: Ứng dụng được cấu trúc như một trang tổng quan (dashboard) tương tác, chia thành các khu vực chuyên đề logic: Quản lý Rủi ro, Phân tích Hiệu suất, Quản lý Chi phí & Dòng tiền, và các Hệ thống Hỗ trợ. Cách tiếp cận này nhóm các khái niệm liên quan (ví dụ: tất cả các chỉ số rủi ro vào một nơi) và sử dụng các tab, thanh trượt và biểu đồ động để người dùng chủ động khám phá thay vì đọc thụ động. Điều này giúp tăng cường sự hiểu biết và tương tác, làm cho nội dung phức tạp trở nên dễ tiếp cận hơn so với cấu trúc tuyến tính của báo cáo gốc. -->
+    <!-- Visualization & Content Choices: 
+        - KRI: Mục tiêu: Cảnh báo. Viz: Biểu đồ đường với các ngưỡng. Tương tác: Dropdown để chọn KRI. Lý do: Trực quan hóa xu hướng so với các giới hạn an toàn. Thư viện: Chart.js.
+        - Sharpe Ratio: Mục tiêu: So sánh. Viz: Biểu đồ cột. Tương tác: Thanh trượt để điều chỉnh đầu vào. Lý do: Giúp hiểu rõ mối quan hệ giữa lợi nhuận, rủi ro và tỷ lệ. Thư viện: Chart.js.
+        - VaR: Mục tiêu: Lượng hóa rủi ro. Viz: Biểu đồ tần suất (histogram). Tương tác: Thanh trượt để thay đổi độ tin cậy. Lý do: Minh họa khái niệm thống kê một cách trực quan. Thư viện: Chart.js.
+        - Cost Driver: Mục tiêu: Hiển thị mối quan hệ. Viz: Biểu đồ phân tán. Tương tác: Tooltip khi di chuột. Lý do: Cách tốt nhất để thể hiện mối tương quan giữa hai biến. Thư viện: Chart.js.
+        - Cash Flow: Mục tiêu: Giải thích cấu thành. Viz: Biểu đồ thác nước. Tương tác: Tooltip trên các thành phần. Lý do: Phân rã dòng tiền ròng thành các phần đóng góp. Thư viện: Chart.js.
+        - Các chỉ số khác (Lợi nhuận, Nợ, ROE/ROA): Mục tiêu: So sánh & theo dõi. Viz: Biểu đồ cột và đường. Tương tác: Tooltip. Lý do: Tiêu chuẩn để so sánh hiệu suất theo thời gian và với các đối thủ. Thư viện: Chart.js.
+        - KPI/OKR/CRM: Mục tiêu: Thông tin. Viz: Bố cục thẻ HTML/CSS. Tương tác: Hiệu ứng hover. Lý do: Trình bày thông tin khái niệm một cách rõ ràng, ngắn gọn.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #F8F9FA;
+            color: #343A40;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        .nav-link {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #0D6EFD;
+            border-bottom-color: #0D6EFD;
+        }
+
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            background-color: #0D6EFD;
+            color: white;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-gray-800">Tài chính Doanh nghiệp</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#overview" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Tổng
+                            quan</a>
+                        <a href="#risk" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Quản lý
+                            Rủi ro</a>
+                        <a href="#performance"
+                            class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Phân tích Hiệu
+                            suất</a>
+                        <a href="#cost-cashflow"
+                            class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Chi phí & Dòng
+                            tiền</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+
+        <section id="overview" class="my-12 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-2 text-gray-800">Hệ thống Quản lý Tài chính (FMS)</h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-10">FMS là giải pháp công nghệ toàn diện giúp tổ
+                chức, quản lý và báo cáo mọi hoạt động tài chính. Nó không chỉ là công cụ kế toán mà còn là trái tim
+                chiến lược của doanh nghiệp, đặc biệt trong các hệ thống ERP, cung cấp nền tảng dữ liệu vững chắc cho
+                các quyết định kinh doanh quan trọng.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="card p-6 text-center">
+                    <div
+                        class="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 text-blue-600 mx-auto mb-4">
+                        <span>🎯</span>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Ra Quyết định Chiến lược</h3>
+                    <p class="text-sm text-gray-600">Cung cấp cái nhìn tổng quan, chính xác về tài chính, giúp ban lãnh
+                        đạo đưa ra quyết định nhanh chóng và sáng suốt.</p>
+                </div>
+                <div class="card p-6 text-center">
+                    <div
+                        class="flex items-center justify-center h-12 w-12 rounded-full bg-green-100 text-green-600 mx-auto mb-4">
+                        <span>💰</span>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Tối ưu Nguồn lực & Chi phí</h3>
+                    <p class="text-sm text-gray-600">Xác định cách nguồn lực được sử dụng, giúp tối ưu hóa và kiểm soát
+                        chi phí chặt chẽ để tối đa hóa lợi nhuận.</p>
+                </div>
+                <div class="card p-6 text-center">
+                    <div
+                        class="flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 text-yellow-600 mx-auto mb-4">
+                        <span>🛡️</span>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Tuân thủ & Quản lý Rủi ro</h3>
+                    <p class="text-sm text-gray-600">Đảm bảo tuân thủ các quy định pháp lý, giảm thiểu rủi ro và tăng
+                        cường tính minh bạch trong quản lý.</p>
+                </div>
+                <div class="card p-6 text-center">
+                    <div
+                        class="flex items-center justify-center h-12 w-12 rounded-full bg-purple-100 text-purple-600 mx-auto mb-4">
+                        <span>📈</span>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Lập kế hoạch & Dự báo</h3>
+                    <p class="text-sm text-gray-600">Hỗ trợ xây dựng kế hoạch tài chính vững chắc và đưa ra các dự báo
+                        chính xác cho tương lai.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="risk" class="my-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-2 text-gray-800">Bảng điều khiển Quản lý Rủi ro</h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-10">Quản lý rủi ro là việc xác định, đánh giá và
+                kiểm soát các mối đe dọa đối với vốn và lợi nhuận của một tổ chức. Bảng điều khiển này giới thiệu các
+                công cụ chính để lượng hóa và giám sát rủi ro, giúp doanh nghiệp đưa ra quyết định đầu tư và vận hành an
+                toàn hơn.</p>
+
+            <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+                <div class="mb-6 border-b border-gray-200">
+                    <nav class="flex space-x-2 sm:space-x-4" aria-label="Tabs">
+                        <button class="tab-button risk-tab active" data-target="kri-content">KRI</button>
+                        <button class="tab-button risk-tab" data-target="sharpe-content">Sharpe Ratio</button>
+                        <button class="tab-button risk-tab" data-target="var-content">Value at Risk (VaR)</button>
+                    </nav>
+                </div>
+
+                <div id="kri-content" class="tab-content risk-content">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-2xl font-semibold mb-3">Chỉ số Rủi ro Chính (KRI)</h3>
+                            <p class="text-gray-600 mb-4">KRI là chỉ số cảnh báo sớm, giúp theo dõi các dấu hiệu rủi ro
+                                tiềm ẩn trước khi chúng gây thiệt hại. Khác với KPI (đo lường hiệu suất đã qua), KRI
+                                mang tính dự báo, giúp doanh nghiệp chủ động kiểm soát và giảm thiểu tác động tiêu cực.
+                            </p>
+                            <div class="mb-4">
+                                <label for="kri-select" class="block text-sm font-medium text-gray-700 mb-1">Chọn một ví
+                                    dụ KRI:</label>
+                                <select id="kri-select" class="w-full p-2 border border-gray-300 rounded-md">
+                                    <option value="turnover">Tỷ lệ nhân viên nghỉ việc (%)</option>
+                                    <option value="inventory">Tỷ lệ hàng tồn kho quá hạn (%)</option>
+                                    <option value="debt">Tỷ lệ nợ quá hạn (%)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="kriChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sharpe-content" class="tab-content risk-content hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-2xl font-semibold mb-3">Chỉ số Sharpe (Sharpe Ratio)</h3>
+                            <p class="text-gray-600 mb-4">Chỉ số Sharpe đo lường hiệu suất của một khoản đầu tư sau khi
+                                đã điều chỉnh theo rủi ro. Chỉ số càng cao, lợi nhuận tạo ra trên mỗi đơn vị rủi ro càng
+                                tốt. Nó giúp trả lời câu hỏi: "Lợi nhuận cao có thực sự đến từ quyết định thông minh hay
+                                chỉ vì chấp nhận quá nhiều rủi ro?".</p>
+                            <div class="space-y-4">
+                                <div>
+                                    <h4 class="font-semibold">Danh mục A</h4>
+                                    <label class="text-sm">Lợi nhuận kỳ vọng (%): <span
+                                            id="returnAVal">18</span></label>
+                                    <input type="range" id="returnA" min="0" max="30" value="18" class="w-full">
+                                    <label class="text-sm">Độ lệch chuẩn (%): <span id="stdDevAVal">12</span></label>
+                                    <input type="range" id="stdDevA" min="1" max="25" value="12" class="w-full">
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold">Danh mục B</h4>
+                                    <label class="text-sm">Lợi nhuận kỳ vọng (%): <span
+                                            id="returnBVal">15</span></label>
+                                    <input type="range" id="returnB" min="0" max="30" value="15" class="w-full">
+                                    <label class="text-sm">Độ lệch chuẩn (%): <span id="stdDevBVal">8</span></label>
+                                    <input type="range" id="stdDevB" min="1" max="25" value="8" class="w-full">
+                                </div>
+                                <div>
+                                    <label class="text-sm">Lợi nhuận phi rủi ro (%): <span
+                                            id="riskFreeVal">3</span></label>
+                                    <input type="range" id="riskFree" min="0" max="10" value="3" class="w-full">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="sharpeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="var-content" class="tab-content risk-content hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-2xl font-semibold mb-3">Giá trị Rủi ro (Value at Risk - VaR)</h3>
+                            <p class="text-gray-600 mb-4">VaR là một chỉ số thống kê ước tính mức lỗ tối đa có thể xảy
+                                ra trong một danh mục đầu tư, trong một khoảng thời gian nhất định, với một mức độ tin
+                                cậy cho trước. Ví dụ: "VaR 1 ngày, 95% là 1 tỷ đồng" nghĩa là có 95% khả năng khoản lỗ
+                                trong ngày sẽ không vượt quá 1 tỷ.</p>
+                            <div class="mb-4">
+                                <label for="confidence-level" class="block text-sm font-medium text-gray-700">Mức độ tin
+                                    cậy: <span id="confidence-val">95</span>%</label>
+                                <input id="confidence-level" type="range" min="90" max="99" value="95" class="w-full">
+                            </div>
+                            <div id="var-result" class="p-4 bg-gray-100 rounded-lg text-center">
+                                <p class="text-gray-700">Với mức tin cậy <span class="font-bold">95%</span>, khoản lỗ
+                                    tối đa dự kiến là:</p>
+                                <p class="text-2xl font-bold text-red-600" id="var-value-display">-1.65%</p>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="varChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="performance" class="my-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-2 text-gray-800">Phân tích Hiệu suất Doanh nghiệp</h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-10">Việc phân tích các chỉ số hiệu suất giúp đánh
+                giá sức khỏe tài chính và khả năng sinh lời của doanh nghiệp. Khu vực này cung cấp các công cụ để so
+                sánh hiệu quả hoạt động, cấu trúc vốn và khả năng sử dụng tài sản để tạo ra lợi nhuận, giúp xác định
+                điểm mạnh và điểm yếu trong hoạt động kinh doanh.</p>
+
+            <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+                <div class="mb-6 border-b border-gray-200">
+                    <nav class="flex space-x-2 sm:space-x-4" aria-label="Tabs">
+                        <button class="tab-button perf-tab active" data-target="profit-content">Tỷ suất Lợi
+                            nhuận</button>
+                        <button class="tab-button perf-tab" data-target="debt-content">Tỷ lệ Nợ</button>
+                        <button class="tab-button perf-tab" data-target="roe-roa-content">ROE & ROA</button>
+                    </nav>
+                </div>
+
+                <div id="profit-content" class="tab-content perf-content">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-2xl font-semibold mb-3">Tỷ suất Lợi nhuận</h3>
+                            <p class="text-gray-600 mb-4">Các tỷ suất lợi nhuận đo lường khả năng của doanh nghiệp trong
+                                việc chuyển đổi doanh thu thành lợi nhuận. Tỷ suất lợi nhuận gộp phản ánh hiệu quả sản
+                                xuất, trong khi tỷ suất lợi nhuận ròng cho thấy hiệu quả tổng thể sau khi trừ mọi chi
+                                phí.</p>
+                            <p class="text-sm text-gray-500">Biểu đồ bên phải so sánh Tỷ suất lợi nhuận gộp (GPM) và Tỷ
+                                suất lợi nhuận ròng (NPM) qua các năm, cho thấy xu hướng về khả năng sinh lời của công
+                                ty.</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="profitabilityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="debt-content" class="tab-content perf-content hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-2xl font-semibold mb-3">Tỷ lệ Nợ</h3>
+                            <p class="text-gray-600 mb-4">Các tỷ lệ nợ đánh giá mức độ doanh nghiệp sử dụng vốn vay để
+                                tài trợ cho tài sản. Tỷ lệ cao có thể cho thấy rủi ro tài chính lớn, nhưng cũng có thể
+                                là dấu hiệu của việc sử dụng đòn bẩy hiệu quả để tăng trưởng. Việc so sánh với trung
+                                bình ngành là rất quan trọng.</p>
+                            <p class="text-sm text-gray-500">Biểu đồ thể hiện xu hướng Tỷ lệ Nợ trên Vốn chủ sở hữu
+                                (D/E) và Tỷ lệ Nợ trên Tổng tài sản của công ty so với mức trung bình ngành.</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="debtChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="roe-roa-content" class="tab-content perf-content hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-2xl font-semibold mb-3">ROE và ROA</h3>
+                            <p class="text-gray-600 mb-4">
+                                <strong>ROE (Lợi nhuận trên Vốn chủ sở hữu)</strong> đo lường lợi nhuận tạo ra từ mỗi
+                                đồng vốn của cổ đông.
+                                <br>
+                                <strong>ROA (Lợi nhuận trên Tổng tài sản)</strong> đo lường hiệu quả sử dụng toàn bộ tài
+                                sản (cả vốn vay và vốn chủ sở hữu) để tạo ra lợi nhuận.
+                            </p>
+                            <p class="text-sm text-gray-500">So sánh ROE và ROA giúp hiểu được tác động của đòn bẩy tài
+                                chính. Nếu ROE cao hơn đáng kể so với ROA, điều đó cho thấy công ty đang sử dụng nợ một
+                                cách hiệu quả để khuếch đại lợi nhuận cho cổ đông.</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="roeRoaChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cost-cashflow" class="my-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-2 text-gray-800">Quản lý Chi phí & Dòng tiền</h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-10">Hiểu rõ các yếu tố gây ra chi phí và quản lý
+                chặt chẽ dòng tiền là hai trụ cột của sự ổn định tài chính. Phần này khám phá cách xác định các nhân tố
+                chi phí để phân bổ chính xác và cách phân tích dòng tiền để đảm bảo khả năng thanh khoản và duy trì hoạt
+                động liên tục.</p>
+
+            <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+                <div class="mb-6 border-b border-gray-200">
+                    <nav class="flex space-x-2 sm:space-x-4" aria-label="Tabs">
+                        <button class="tab-button cost-tab active" data-target="costdriver-content">Cost Driver</button>
+                        <button class="tab-button cost-tab" data-target="cashflow-content">Dòng tiền</button>
+                    </nav>
+                </div>
+
+                <div id="costdriver-content" class="tab-content cost-content">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-2xl font-semibold mb-3">Nhân tố chi phí (Cost Driver)</h3>
+                            <p class="text-gray-600 mb-4">Cost Driver là yếu tố hoặc hoạt động cụ thể gây ra sự phát
+                                sinh chi phí. Việc xác định đúng Cost Driver (ví dụ: số giờ máy chạy, số lần setup) là
+                                nền tảng của phương pháp tính giá thành theo hoạt động (ABC), giúp phân bổ chi phí gián
+                                tiếp một cách chính xác và kiểm soát chi phí hiệu quả.</p>
+                            <p class="text-sm text-gray-500">Biểu đồ phân tán bên phải cho thấy mối quan hệ giữa "Số giờ
+                                máy chạy" (Cost Driver) và "Tổng chi phí điện". Mối quan hệ càng chặt chẽ, khả năng dự
+                                báo chi phí càng cao.</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="costDriverChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="cashflow-content" class="tab-content cost-content hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-2xl font-semibold mb-3">Phân tích Dòng tiền</h3>
+                            <p class="text-gray-600 mb-4">Dòng tiền là mạch máu của doanh nghiệp. Phân tích dòng tiền từ
+                                ba hoạt động chính (Kinh doanh, Đầu tư, Tài chính) giúp đánh giá khả năng thanh khoản và
+                                sức khỏe tài chính thực sự, đôi khi quan trọng hơn cả lợi nhuận trên giấy tờ.</p>
+                            <p class="text-sm text-gray-500">Biểu đồ thác nước minh họa cách dòng tiền ròng được hình
+                                thành, bắt đầu từ dòng tiền hoạt động kinh doanh, sau đó điều chỉnh bởi các hoạt động
+                                đầu tư và tài chính.</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="cashflowChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const allCharts = {};
+
+            function createKriChart() {
+                const ctx = document.getElementById('kriChart').getContext('2d');
+                const data = {
+                    turnover: {
+                        label: 'Tỷ lệ nhân viên nghỉ việc (%)',
+                        values: [5, 6, 8, 7, 10, 12, 16, 15],
+                        thresholds: { green: 5, yellow: 15, red: 15 }
+                    },
+                    inventory: {
+                        label: 'Tỷ lệ hàng tồn kho quá hạn (%)',
+                        values: [8, 9, 11, 13, 15, 12, 18, 21],
+                        thresholds: { green: 10, yellow: 20, red: 20 }
+                    },
+                    debt: {
+                        label: 'Tỷ lệ nợ quá hạn (%)',
+                        values: [1.5, 1.8, 2.1, 2.5, 3.0, 4.5, 5.2, 4.8],
+                        thresholds: { green: 2, yellow: 5, red: 5 }
+                    }
+                };
+
+                const chartConfig = {
+                    type: 'line',
+                    data: {
+                        labels: ['Quý 1', 'Quý 2', 'Quý 3', 'Quý 4', 'Quý 5', 'Quý 6', 'Quý 7', 'Quý 8'],
+                        datasets: [{
+                            label: '',
+                            data: [],
+                            borderColor: '#4A90E2',
+                            backgroundColor: 'rgba(74, 144, 226, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: '' },
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        return `${context.dataset.label}: ${context.parsed.y}%`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Giá trị (%)' }
+                            }
+                        },
+                        annotation: {
+                            annotations: {}
+                        }
+                    }
+                };
+
+                allCharts.kri = new Chart(ctx, chartConfig);
+
+                function updateKriChart(kriKey) {
+                    const kriData = data[kriKey];
+                    const chart = allCharts.kri;
+                    chart.data.datasets[0].label = kriData.label;
+                    chart.data.datasets[0].data = kriData.values;
+                    chart.options.plugins.title.text = `Xu hướng: ${kriData.label}`;
+
+                    chart.options.plugins.annotation = {
+                        annotations: {
+                            yellowLine: {
+                                type: 'line',
+                                yMin: kriData.thresholds.yellow,
+                                yMax: kriData.thresholds.yellow,
+                                borderColor: '#F3A33A',
+                                borderWidth: 2,
+                                borderDash: [6, 6],
+                                label: {
+                                    content: 'Ngưỡng Cảnh báo',
+                                    enabled: true,
+                                    position: 'end',
+                                    backgroundColor: '#F3A33A'
+                                }
+                            },
+                            redLine: {
+                                type: 'line',
+                                yMin: kriData.thresholds.red,
+                                yMax: kriData.thresholds.red,
+                                borderColor: '#E35050',
+                                borderWidth: 2,
+                                label: {
+                                    content: 'Ngưỡng Can thiệp',
+                                    enabled: true,
+                                    position: 'start',
+                                    backgroundColor: '#E35050'
+                                }
+                            }
+                        }
+                    };
+                    chart.update();
+                }
+
+                document.getElementById('kri-select').addEventListener('change', function (e) {
+                    updateKriChart(e.target.value);
+                });
+
+                updateKriChart('turnover');
+            }
+
+            function createSharpeChart() {
+                const ctx = document.getElementById('sharpeChart').getContext('2d');
+                const chartConfig = {
+                    type: 'bar',
+                    data: {
+                        labels: ['Danh mục A', 'Danh mục B'],
+                        datasets: [{
+                            label: 'Sharpe Ratio',
+                            data: [1.25, 1.5],
+                            backgroundColor: ['rgba(74, 144, 226, 0.7)', 'rgba(80, 227, 194, 0.7)'],
+                            borderColor: ['#4A90E2', '#50E3C2'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        plugins: {
+                            title: { display: true, text: 'So sánh Sharpe Ratio' },
+                            legend: { display: false }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Sharpe Ratio' }
+                            }
+                        }
+                    }
+                };
+                allCharts.sharpe = new Chart(ctx, chartConfig);
+
+                const inputs = ['returnA', 'stdDevA', 'returnB', 'stdDevB', 'riskFree'];
+                inputs.forEach(id => {
+                    document.getElementById(id).addEventListener('input', updateSharpe);
+                    document.getElementById(`${id}Val`).innerText = document.getElementById(id).value;
+                });
+
+                function updateSharpe() {
+                    const values = {};
+                    inputs.forEach(id => {
+                        values[id] = parseFloat(document.getElementById(id).value);
+                        document.getElementById(`${id}Val`).innerText = values[id];
+                    });
+
+                    const sharpeA = (values.returnA - values.riskFree) / values.stdDevA;
+                    const sharpeB = (values.returnB - values.riskFree) / values.stdDevB;
+
+                    const chart = allCharts.sharpe;
+                    chart.data.datasets[0].data = [sharpeA.toFixed(2), sharpeB.toFixed(2)];
+                    chart.update();
+                }
+                updateSharpe();
+            }
+
+            function createVarChart() {
+                const ctx = document.getElementById('varChart').getContext('2d');
+                const returns = Array.from({ length: 500 }, () => (Math.random() - 0.45) * 5);
+                returns.sort((a, b) => a - b);
+
+                const chartConfig = {
+                    type: 'bar',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Tần suất Lợi nhuận',
+                            data: [],
+                            backgroundColor: 'rgba(74, 144, 226, 0.5)',
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: 'Phân phối Lợi nhuận và VaR' },
+                            legend: { display: false }
+                        },
+                        scales: {
+                            x: { title: { display: true, text: 'Lợi nhuận (%)' } },
+                            y: { title: { display: true, text: 'Tần suất' } }
+                        }
+                    }
+                };
+                allCharts.var = new Chart(ctx, chartConfig);
+
+                function updateVarChart() {
+                    const confidence = parseInt(document.getElementById('confidence-level').value);
+                    document.getElementById('confidence-val').innerText = confidence;
+
+                    const varIndex = Math.floor((100 - confidence) / 100 * returns.length);
+                    const varValue = returns[varIndex];
+
+                    document.getElementById('var-value-display').innerText = `${varValue.toFixed(2)}%`;
+                    document.querySelector('#var-result p:first-child span').innerText = confidence;
+
+                    const bins = {};
+                    returns.forEach(r => {
+                        const bin = Math.floor(r * 2) / 2;
+                        bins[bin] = (bins[bin] || 0) + 1;
+                    });
+
+                    const chart = allCharts.var;
+                    chart.data.labels = Object.keys(bins);
+                    chart.data.datasets[0].data = Object.values(bins);
+                    chart.data.datasets[0].backgroundColor = Object.keys(bins).map(bin =>
+                        parseFloat(bin) <= varValue ? '#E35050' : 'rgba(74, 144, 226, 0.5)'
+                    );
+                    chart.update();
+                }
+
+                document.getElementById('confidence-level').addEventListener('input', updateVarChart);
+                updateVarChart();
+            }
+
+            function createProfitabilityChart() {
+                const ctx = document.getElementById('profitabilityChart').getContext('2d');
+                allCharts.profitability = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Năm 2021', 'Năm 2022', 'Năm 2023', 'Năm 2024'],
+                        datasets: [
+                            {
+                                label: 'Tỷ suất Lợi nhuận Gộp (GPM)',
+                                data: [45, 48, 52, 50],
+                                backgroundColor: 'rgba(74, 144, 226, 0.7)',
+                            },
+                            {
+                                label: 'Tỷ suất Lợi nhuận Ròng (NPM)',
+                                data: [15, 17, 20, 18],
+                                backgroundColor: 'rgba(80, 227, 194, 0.7)',
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: 'Xu hướng Tỷ suất Lợi nhuận (%)' },
+                            tooltip: { mode: 'index', intersect: false }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, title: { display: true, text: '%' } }
+                        }
+                    }
+                });
+            }
+
+            function createDebtChart() {
+                const ctx = document.getElementById('debtChart').getContext('2d');
+                allCharts.debt = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Năm 2021', 'Năm 2022', 'Năm 2023', 'Năm 2024'],
+                        datasets: [
+                            {
+                                label: 'D/E Ratio (Công ty)',
+                                data: [1.2, 1.4, 1.3, 1.1],
+                                borderColor: '#4A90E2',
+                                tension: 0.1
+                            },
+                            {
+                                label: 'Debt-to-Asset (Công ty)',
+                                data: [0.55, 0.58, 0.56, 0.52],
+                                borderColor: '#50E3C2',
+                                tension: 0.1
+                            },
+                            {
+                                label: 'D/E (Trung bình ngành)',
+                                data: [1.5, 1.5, 1.4, 1.4],
+                                borderColor: '#F3A33A',
+                                borderDash: [5, 5],
+                                tension: 0.1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: 'Xu hướng Tỷ lệ Nợ' },
+                        },
+                        scales: {
+                            y: { beginAtZero: true, title: { display: true, text: 'Tỷ lệ' } }
+                        }
+                    }
+                });
+            }
+
+            function createRoeRoaChart() {
+                const ctx = document.getElementById('roeRoaChart').getContext('2d');
+                allCharts.roeRoa = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Năm 2022', 'Năm 2023', 'Năm 2024'],
+                        datasets: [
+                            {
+                                label: 'ROE (%)',
+                                data: [18, 22, 20],
+                                backgroundColor: 'rgba(74, 144, 226, 0.7)',
+                            },
+                            {
+                                label: 'ROA (%)',
+                                data: [8, 10, 9],
+                                backgroundColor: 'rgba(80, 227, 194, 0.7)',
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: 'So sánh ROE và ROA (%)' },
+                            tooltip: { mode: 'index', intersect: false }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, title: { display: true, text: '%' } }
+                        }
+                    }
+                });
+            }
+
+            function createCostDriverChart() {
+                const ctx = document.getElementById('costDriverChart').getContext('2d');
+                allCharts.costDriver = new Chart(ctx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'Chi phí Điện vs. Giờ máy chạy',
+                            data: [
+                                { x: 100, y: 500 }, { x: 120, y: 580 }, { x: 150, y: 700 },
+                                { x: 180, y: 850 }, { x: 200, y: 980 }, { x: 220, y: 1050 },
+                                { x: 250, y: 1200 }, { x: 260, y: 1280 }, { x: 300, y: 1450 }
+                            ],
+                            backgroundColor: 'rgba(74, 144, 226, 0.7)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: 'Mối quan hệ giữa Chi phí và Cost Driver' }
+                        },
+                        scales: {
+                            x: { title: { display: true, text: 'Số giờ máy chạy' } },
+                            y: { title: { display: true, text: 'Tổng chi phí điện (USD)' } }
+                        }
+                    }
+                });
+            }
+
+            function createCashflowChart() {
+                const ctx = document.getElementById('cashflowChart').getContext('2d');
+                allCharts.cashflow = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Đầu kỳ', 'HĐ Kinh doanh', 'HĐ Đầu tư', 'HĐ Tài chính', 'Cuối kỳ'],
+                        datasets: [{
+                            label: 'Dòng tiền (tỷ VND)',
+                            data: [
+                                [0, 100],  // Đầu kỳ
+                                [100, 150], // Kinh doanh (+)
+                                [150, 120], // Đầu tư (-)
+                                [120, 140], // Tài chính (+)
+                                [0, 140],  // Cuối kỳ
+                            ],
+                            backgroundColor: [
+                                'rgba(108, 117, 125, 0.7)',
+                                'rgba(80, 227, 194, 0.7)',
+                                'rgba(227, 80, 80, 0.7)',
+                                'rgba(80, 227, 194, 0.7)',
+                                'rgba(74, 144, 226, 0.7)'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: 'Phân tích Dòng tiền (Biểu đồ Thác nước)' },
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, title: { display: true, text: 'Số tiền (tỷ VND)' } }
+                        }
+                    }
+                });
+            }
+
+
+            function setupTabs(containerSelector, buttonClass, contentClass) {
+                const tabButtons = document.querySelectorAll(`.${buttonClass}`);
+                const tabContents = document.querySelectorAll(`.${contentClass}`);
+
+                tabButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        tabButtons.forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+
+                        const targetId = button.dataset.target;
+                        tabContents.forEach(content => {
+                            if (content.id === targetId) {
+                                content.classList.remove('hidden');
+                            } else {
+                                content.classList.add('hidden');
+                            }
+                        });
+                    });
+                });
+            }
+
+            function setupNavScroll() {
+                const navLinks = document.querySelectorAll('.nav-link');
+                const sections = document.querySelectorAll('main section');
+
+                window.addEventListener('scroll', () => {
+                    let current = '';
+                    sections.forEach(section => {
+                        const sectionTop = section.offsetTop;
+                        if (pageYOffset >= sectionTop - 80) {
+                            current = section.getAttribute('id');
+                        }
+                    });
+
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href').includes(current)) {
+                            link.classList.add('active');
+                        }
+                    });
+                });
+
+                navLinks.forEach(anchor => {
+                    anchor.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        document.querySelector(this.getAttribute('href')).scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    });
+                });
+            }
+
+            createKriChart();
+            createSharpeChart();
+            createVarChart();
+            createProfitabilityChart();
+            createDebtChart();
+            createRoeRoaChart();
+            createCostDriverChart();
+            createCashflowChart();
+
+            setupTabs('.risk-tabs-container', 'risk-tab', 'risk-content');
+            setupTabs('.perf-tabs-container', 'perf-tab', 'perf-content');
+            setupTabs('.cost-tabs-container', 'cost-tab', 'cost-content');
+            setupNavScroll();
+        });
+    </script>
+</body>
+
+</html>
