@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hệ thống Quản lý Tài chính Doanh nghiệp</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+      color: #333;
+    }
+    header {
+      background: #004c99;
+      color: #fff;
+      padding: 20px 0;
+      text-align: center;
+    }
+    nav {
+      background: #003366;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: #fff;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 20px 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      color: #004c99;
+    }
+    ul {
+      margin-left: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+    }
+    table, th, td {
+      border: 1px solid #bbb;
+    }
+    th, td {
+      padding: 8px 12px;
+      text-align: left;
+    }
+    th {
+      background: #e6f0ff;
+    }
+    footer {
+      text-align: center;
+      padding: 15px 0;
+      background: #004c99;
+      color: #fff;
+      margin-top: 30px;
+    }
+    .chart-placeholder {
+      width: 100%;
+      height: 200px;
+      background: #ddd;
+      color: #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 15px 0;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Hệ thống Quản lý Tài chính Doanh nghiệp</h1>
+    <p>Tổng quan về các chỉ số quan trọng &amp; quản lý rủi ro</p>
+  </header>
+
+  <nav>
+    <a href="#overview">Tổng quan</a>
+    <a href="#kri">KRI</a>
+    <a href="#sharpe">Sharpe Ratio</a>
+    <a href="#var">VaR</a>
+    <a href="#cost-drivers">Cost Drivers</a>
+    <a href="#financial-ratios">Tỉ số Tài chính</a>
+  </nav>
+
+  <div class="container">
+
+    <section id="overview">
+      <h2>1. Tổng quan hệ thống quản lý tài chính</h2>
+      <p>Hệ thống quản lý tài chính tích hợp dữ liệu kế toán, kiểm soát nội bộ và báo cáo quản trị, cho phép:</p>
+      <ul>
+        <li>Giám sát dòng tiền, nợ phải thu, nợ phải trả.</li>
+        <li>Cảnh báo sớm rủi ro tài chính.</li>
+        <li>Hỗ trợ ra quyết định chiến lược và vận hành.</li>
+      </ul>
+    </section>
+
+    <section id="kri">
+      <h2>2. Chỉ số Rủi ro Chính (KRI)</h2>
+      <p>KRI (Key Risk Indicator) giúp doanh nghiệp theo dõi các tín hiệu sớm về rủi ro tài chính:</p>
+      <ul>
+        <li>Tỷ lệ nợ quá hạn so với tổng nợ.</li>
+        <li>Tỷ lệ thất thu công nợ hàng tháng.</li>
+        <li>Biến động doanh thu so với kế hoạch.</li>
+      </ul>
+      <div class="chart-placeholder">
+        Biểu đồ biến động KRI
+      </div>
+    </section>
+
+    <section id="sharpe">
+      <h2>3. Chỉ số Sharpe (Sharpe Ratio)</h2>
+      <p>Sharpe Ratio đo lường hiệu quả sinh lời điều chỉnh theo rủi ro:</p>
+      <ul>
+        <li>Công thức: (Rp – Rf) / σp</li>
+        <li>Rp: Lợi nhuận danh mục</li>
+        <li>Rf: Lãi suất phi rủi ro</li>
+        <li>σp: Độ lệch chuẩn lợi nhuận</li>
+      </ul>
+      <p>Giá trị Sharpe cao cho thấy danh mục đầu tư hiệu quả hơn sau khi đã bù đắp rủi ro.</p>
+      <div class="chart-placeholder">
+        Biểu đồ Sharpe Ratio qua các kỳ
+      </div>
+    </section>
+
+    <section id="var">
+      <h2>4. Giá trị Rủi ro (VaR - Value at Risk)</h2>
+      <p>VaR xác định mức tổn thất tối đa có thể xảy ra trong khung thời gian xác định với độ tin cậy:</p>
+      <ul>
+        <li>Historical Simulation</li>
+        <li>Variance–Covariance</li>
+        <li>Monte Carlo Simulation</li>
+      </ul>
+      <p>Ví dụ: VaR 1 ngày ở độ tin cậy 95% = 100.000 USD → 95% ngày, lỗ không vượt quá 100.000 USD.</p>
+      <div class="chart-placeholder">
+        So sánh VaR 95% &amp; 99%
+      </div>
+    </section>
+
+    <section id="cost-drivers">
+      <h2>5. Cost Drivers</h2>
+      <p>Cost Drivers là các yếu tố chính ảnh hưởng tới chi phí hoạt động:</p>
+      <ul>
+        <li>Số giờ lao động trực tiếp</li>
+        <li>Khối lượng sản xuất</li>
+        <li>Công suất sử dụng máy móc</li>
+      </ul>
+      <p>Phân tích chi phí theo Cost Driver giúp tối ưu hóa và kiểm soát chi phí hiệu quả.</p>
+    </section>
+
+    <section id="financial-ratios">
+      <h2>6. Các Tỉ số Tài chính Doanh nghiệp</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Loại chỉ số</th>
+            <th>Chỉ số</th>
+            <th>Ý nghĩa</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Thanh khoản</td>
+            <td>Current Ratio, Quick Ratio</td>
+            <td>Đo khả năng trang trải nợ ngắn hạn</td>
+          </tr>
+          <tr>
+            <td>Đòn bẩy</td>
+            <td>Debt to Equity, Interest Coverage</td>
+            <td>Đánh giá mức vay nợ so với vốn</td>
+          </tr>
+          <tr>
+            <td>Hiệu quả</td>
+            <td>Inventory Turnover, Asset Turnover</td>
+            <td>Đo tốc độ luân chuyển tài sản</td>
+          </tr>
+          <tr>
+            <td>Sinh lời</td>
+            <td>ROA, ROE, ROS</td>
+            <td>Đánh giá hiệu quả sinh lời</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+  </div>
+
+  <footer>
+    <p>Cảm ơn các bạn đã lắng nghe – Q&amp;A</p>
+  </footer>
+
+</body>
+</html>
