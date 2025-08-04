@@ -1,204 +1,1279 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hệ thống Quản lý Tài chính Doanh nghiệp</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      margin: 0;
-      padding: 0;
-      background: #f5f5f5;
-      color: #333;
-    }
-    header {
-      background: #004c99;
-      color: #fff;
-      padding: 20px 0;
-      text-align: center;
-    }
-    nav {
-      background: #003366;
-      padding: 10px;
-      text-align: center;
-    }
-    nav a {
-      color: #fff;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    .container {
-      max-width: 900px;
-      margin: 30px auto;
-      background: #fff;
-      padding: 20px 30px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    h1, h2 {
-      color: #004c99;
-    }
-    ul {
-      margin-left: 20px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 15px 0;
-    }
-    table, th, td {
-      border: 1px solid #bbb;
-    }
-    th, td {
-      padding: 8px 12px;
-      text-align: left;
-    }
-    th {
-      background: #e6f0ff;
-    }
-    footer {
-      text-align: center;
-      padding: 15px 0;
-      background: #004c99;
-      color: #fff;
-      margin-top: 30px;
-    }
-    .chart-placeholder {
-      width: 100%;
-      height: 200px;
-      background: #ddd;
-      color: #666;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 15px 0;
-      font-style: italic;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Quản lý Tài chính Doanh nghiệp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #34495e;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .navbar {
+            background: linear-gradient(90deg, var(--primary), var(--dark));
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .hero {
+            background: linear-gradient(rgba(44, 62, 80, 0.85), rgba(44, 62, 80, 0.9)), 
+                        url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+        
+        .section-title {
+            position: relative;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 70px;
+            height: 4px;
+            background: var(--secondary);
+            border-radius: 2px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 25px;
+            background: white;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        }
+        
+        .card-header {
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            color: white;
+            font-weight: 600;
+            padding: 15px 20px;
+            border: none;
+        }
+        
+        .card-body {
+            padding: 25px;
+        }
+        
+        .indicator-box {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .indicator-icon {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+        
+        .formula-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            margin: 15px 0;
+            border-left: 3px solid var(--accent);
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin: 30px 0;
+        }
+        
+        .footer {
+            background: linear-gradient(90deg, var(--dark), var(--primary));
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 60px;
+        }
+        
+        .step-box {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-top: 3px solid var(--secondary);
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .key-point {
+            padding: 15px;
+            border-left: 3px solid var(--secondary);
+            background: rgba(52, 152, 219, 0.08);
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .comparison-table th {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .comparison-table tr:hover {
+            background-color: #e9f7fe;
+        }
+        
+        .metric-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin: 5px;
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+        }
+        
+        .kpi-card {
+            border-top: 4px solid var(--success);
+        }
+        
+        .okr-card {
+            border-top: 4px solid var(--warning);
+        }
+        
+        .crm-card {
+            border-top: 4px solid var(--accent);
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                padding: 70px 0;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-chart-line me-2"></i>Quản lý Tài chính DN
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#kri">KRI</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#sharpe">Sharpe</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#var">VaR</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#cost-driver">Cost Driver</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#metrics">Chỉ số tài chính</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#kpi">KPI</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#okr">OKR</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#crm">CRM</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-  <header>
-    <h1>Hệ thống Quản lý Tài chính Doanh nghiệp</h1>
-    <p>Tổng quan về các chỉ số quan trọng &amp; quản lý rủi ro</p>
-  </header>
-
-  <nav>
-    <a href="#overview">Tổng quan</a>
-    <a href="#kri">KRI</a>
-    <a href="#sharpe">Sharpe Ratio</a>
-    <a href="#var">VaR</a>
-    <a href="#cost-drivers">Cost Drivers</a>
-    <a href="#financial-ratios">Tỉ số Tài chính</a>
-  </nav>
-
-  <div class="container">
-
-    <section id="overview">
-      <h2>1. Tổng quan hệ thống quản lý tài chính</h2>
-      <p>Hệ thống quản lý tài chính tích hợp dữ liệu kế toán, kiểm soát nội bộ và báo cáo quản trị, cho phép:</p>
-      <ul>
-        <li>Giám sát dòng tiền, nợ phải thu, nợ phải trả.</li>
-        <li>Cảnh báo sớm rủi ro tài chính.</li>
-        <li>Hỗ trợ ra quyết định chiến lược và vận hành.</li>
-      </ul>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="display-3 fw-bold mb-3">Hệ Thống Quản Lý Tài Chính Doanh Nghiệp</h1>
+            <p class="lead fs-4 mb-4">Đo lường Rủi ro, Hiệu suất & Kiểm soát Chi phí</p>
+            <div class="row g-4 mt-5">
+                <div class="col-md-3 col-6">
+                    <div class="text-center">
+                        <div class="mb-2"><i class="fas fa-exclamation-triangle fa-3x"></i></div>
+                        <h5>Kiểm soát rủi ro</h5>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="text-center">
+                        <div class="mb-2"><i class="fas fa-chart-bar fa-3x"></i></div>
+                        <h5>Tối ưu hiệu suất</h5>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="text-center">
+                        <div class="mb-2"><i class="fas fa-calculator fa-3x"></i></div>
+                        <h5>Quản lý chi phí</h5>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="text-center">
+                        <div class="mb-2"><i class="fas fa-bullseye fa-3x"></i></div>
+                        <h5>Ra quyết định</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section id="kri">
-      <h2>2. Chỉ số Rủi ro Chính (KRI)</h2>
-      <p>KRI (Key Risk Indicator) giúp doanh nghiệp theo dõi các tín hiệu sớm về rủi ro tài chính:</p>
-      <ul>
-        <li>Tỷ lệ nợ quá hạn so với tổng nợ.</li>
-        <li>Tỷ lệ thất thu công nợ hàng tháng.</li>
-        <li>Biến động doanh thu so với kế hoạch.</li>
-      </ul>
-      <div class="chart-placeholder">
-        Biểu đồ biến động KRI
-      </div>
-    </section>
+    <div class="container">
+        <!-- Introduction -->
+        <section class="mb-5">
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <h2 class="section-title">Tại sao cần Hệ thống Quản lý Tài chính?</h2>
+                    <p>Hệ thống quản lý tài chính hiệu quả giúp doanh nghiệp:</p>
+                    <ul>
+                        <li>Giám sát và kiểm soát rủi ro tài chính</li>
+                        <li>Tối ưu hóa hiệu suất đầu tư và phân bổ vốn</li>
+                        <li>Kiểm soát chi phí và nâng cao lợi nhuận</li>
+                        <li>Đưa ra quyết định chiến lược dựa trên dữ liệu</li>
+                        <li>Tuân thủ quy định và báo cáo tài chính</li>
+                    </ul>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-sitemap me-2"></i>4 Trụ cột chính của Hệ thống
+                        </div>
+                        <div class="card-body">
+                            <ol class="list-group list-group-numbered">
+                                <li class="list-group-item d-flex align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">Chỉ số Rủi ro (KRI, VaR)</div>
+                                        Đo lường và cảnh báo rủi ro tài chính
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">Chỉ số Hiệu suất (Sharpe Ratio)</div>
+                                        Đánh giá hiệu quả đầu tư điều chỉnh theo rủi ro
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">Quản lý Chi phí (Cost Driver)</div>
+                                        Xác định và kiểm soát yếu tố thúc đẩy chi phí
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">Chỉ số Tài chính Cốt lõi</div>
+                                        Đánh giá sức khỏe tài chính tổng thể
+                                    </div>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <section id="sharpe">
-      <h2>3. Chỉ số Sharpe (Sharpe Ratio)</h2>
-      <p>Sharpe Ratio đo lường hiệu quả sinh lời điều chỉnh theo rủi ro:</p>
-      <ul>
-        <li>Công thức: (Rp – Rf) / σp</li>
-        <li>Rp: Lợi nhuận danh mục</li>
-        <li>Rf: Lãi suất phi rủi ro</li>
-        <li>σp: Độ lệch chuẩn lợi nhuận</li>
-      </ul>
-      <p>Giá trị Sharpe cao cho thấy danh mục đầu tư hiệu quả hơn sau khi đã bù đắp rủi ro.</p>
-      <div class="chart-placeholder">
-        Biểu đồ Sharpe Ratio qua các kỳ
-      </div>
-    </section>
+        <!-- KRI Section -->
+        <section id="kri" class="py-5">
+            <h2 class="section-title"><i class="fas fa-exclamation-circle me-2"></i>Chỉ số Rủi ro Chính (KRI)</h2>
+            
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="indicator-box">
+                        <div class="indicator-icon">
+                            <i class="fas fa-radiation"></i>
+                        </div>
+                        <h3>Định nghĩa</h3>
+                        <p>Chỉ số Rủi ro Chính (KRI) là các chỉ số đo lường định lượng được sử dụng để cảnh báo sớm về các rủi ro tiềm ẩn có thể ảnh hưởng đến hoạt động tài chính của doanh nghiệp.</p>
+                        
+                        <h4 class="mt-4">Công thức tính</h4>
+                        <div class="formula-box">
+                            KRI = (Số sự cố rủi ro / Tổng giao dịch) × 100%
+                        </div>
+                        
+                        <h4 class="mt-4">Ví dụ thực tế</h4>
+                        <ul>
+                            <li><strong>Tỷ lệ nợ xấu > 5%:</strong> Cảnh báo rủi ro tín dụng</li>
+                            <li><strong>Biến động tỷ giá tăng 10%:</strong> Rủi ro ngoại hối</li>
+                            <li><strong>Thanh khoản < 1.5:</strong> Rủi ro thanh khoản</li>
+                            <li><strong>Tỷ lệ vòng quay hàng tồn kho < 4:</strong> Rủi ro tồn kho</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-lightbulb me-2"></i>Ứng dụng KRI
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>Thiết lập ngưỡng cảnh báo sớm</li>
+                                <li>Giám sát liên tục các rủi ro chính</li>
+                                <li>Đánh giá hiệu quả kiểm soát rủi ro</li>
+                                <li>Báo cáo định kỳ cho ban lãnh đạo</li>
+                                <li>Tích hợp với hệ thống quản trị rủi ro</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <i class="fas fa-chart-bar me-2"></i>KRI Dashboard
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="kriChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <section id="var">
-      <h2>4. Giá trị Rủi ro (VaR - Value at Risk)</h2>
-      <p>VaR xác định mức tổn thất tối đa có thể xảy ra trong khung thời gian xác định với độ tin cậy:</p>
-      <ul>
-        <li>Historical Simulation</li>
-        <li>Variance–Covariance</li>
-        <li>Monte Carlo Simulation</li>
-      </ul>
-      <p>Ví dụ: VaR 1 ngày ở độ tin cậy 95% = 100.000 USD → 95% ngày, lỗ không vượt quá 100.000 USD.</p>
-      <div class="chart-placeholder">
-        So sánh VaR 95% &amp; 99%
-      </div>
-    </section>
+        <!-- Sharpe Ratio Section -->
+        <section id="sharpe" class="py-5 bg-light">
+            <h2 class="section-title"><i class="fas fa-chart-line me-2"></i>Chỉ số Sharpe (Sharpe Ratio)</h2>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="indicator-box">
+                        <div class="indicator-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <h3>Định nghĩa</h3>
+                        <p>Chỉ số Sharpe đo lường lợi nhuận điều chỉnh theo rủi ro, giúp đánh giá hiệu quả của một khoản đầu tư bằng cách so sánh lợi nhuận vượt trội so với tài sản phi rủi ro với độ lệch chuẩn của lợi nhuận.</p>
+                        
+                        <h4 class="mt-4">Công thức tính</h4>
+                        <div class="formula-box">
+                            Sharpe Ratio = (Lợi nhuận đầu tư - Lãi suất phi rủi ro) / Độ lệch chuẩn lợi nhuận
+                        </div>
+                        
+                        <h4 class="mt-4">Diễn giải kết quả</h4>
+                        <ul>
+                            <li><strong>> 1.5:</strong> Hiệu suất rất tốt</li>
+                            <li><strong>1.0 - 1.5:</strong> Hiệu suất tốt</li>
+                            <li><strong>0.5 - 1.0:</strong> Trung bình</li>
+                            <li><strong>< 0.5:</strong> Kém hiệu quả</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-calculator me-2"></i>Ví dụ minh họa
+                        </div>
+                        <div class="card-body">
+                            <p>So sánh hai quỹ đầu tư:</p>
+                            
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Chỉ số</th>
+                                        <th>Quỹ A</th>
+                                        <th>Quỹ B</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Lợi nhuận trung bình năm</td>
+                                        <td>12%</td>
+                                        <td>15%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lãi suất phi rủi ro</td>
+                                        <td colspan="2">5%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Độ lệch chuẩn</td>
+                                        <td>5%</td>
+                                        <td>12%</td>
+                                    </tr>
+                                    <tr class="table-primary fw-bold">
+                                        <td>Sharpe Ratio</td>
+                                        <td>(12-5)/5 = <span class="text-success">1.4</span></td>
+                                        <td>(15-5)/12 = <span class="text-danger">0.83</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <div class="key-point">
+                                <i class="fas fa-check-circle me-2 text-success"></i>
+                                Mặc dù Quỹ B có lợi nhuận cao hơn, nhưng Quỹ A có chỉ số Sharpe tốt hơn 
+                                do rủi ro thấp hơn → Quỹ A hiệu quả hơn sau khi điều chỉnh rủi ro.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container mt-4">
+                        <canvas id="sharpeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <section id="cost-drivers">
-      <h2>5. Cost Drivers</h2>
-      <p>Cost Drivers là các yếu tố chính ảnh hưởng tới chi phí hoạt động:</p>
-      <ul>
-        <li>Số giờ lao động trực tiếp</li>
-        <li>Khối lượng sản xuất</li>
-        <li>Công suất sử dụng máy móc</li>
-      </ul>
-      <p>Phân tích chi phí theo Cost Driver giúp tối ưu hóa và kiểm soát chi phí hiệu quả.</p>
-    </section>
+        <!-- VaR Section -->
+        <section id="var" class="py-5">
+            <h2 class="section-title"><i class="fas fa-shield-alt me-2"></i>Giá trị Rủi ro (VaR)</h2>
+            
+            <div class="row">
+                <div class="col-lg-7">
+                    <div class="indicator-box">
+                        <div class="indicator-icon">
+                            <i class="fas fa-thermometer-full"></i>
+                        </div>
+                        <h3>Định nghĩa</h3>
+                        <p>Giá trị Rủi ro (VaR) là ước tính thống kê về mức tổn thất tối đa mà một danh mục đầu tư có thể phải chịu trong một khoảng thời gian nhất định với một độ tin cậy xác định.</p>
+                        
+                        <h4 class="mt-4">Công thức tính</h4>
+                        <div class="formula-box">
+                            VaR = Giá trị đầu tư × Độ lệch chuẩn × Hệ số Z
+                        </div>
+                        <p>Với hệ số Z: 
+                            <span class="badge bg-primary">95%: 1.65</span>
+                            <span class="badge bg-primary">99%: 2.33</span>
+                        </p>
+                        
+                        <h4 class="mt-4">Ví dụ thực tế</h4>
+                        <p>Danh mục đầu tư trị giá 100 tỷ VNĐ, độ lệch chuẩn 7%, tính VaR 95% trong 1 ngày:</p>
+                        <div class="formula-box">
+                            VaR = 100 tỷ × 7% × 1.65 = 11.55 tỷ VNĐ
+                        </div>
+                        <p>→ Có 95% khả năng thua lỗ trong ngày không vượt quá 11.55 tỷ VNĐ.</p>
+                        
+                        <div class="key-point">
+                            <i class="fas fa-exclamation-triangle me-2 text-warning"></i>
+                            VaR không đo lường mức tổn thất trong 5% trường hợp xấu nhất (đuôi rủi ro)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-chart-area me-2"></i>Phân phối rủi ro
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="varChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <i class="fas fa-cogs me-2"></i>Phương pháp tính VaR
+                        </div>
+                        <div class="card-body">
+                            <ol>
+                                <li>
+                                    <strong>Phương pháp lịch sử:</strong> 
+                                    Sử dụng dữ liệu lịch sử thực tế
+                                </li>
+                                <li>
+                                    <strong>Phương pháp tham số:</strong> 
+                                    Dựa trên phân phối chuẩn và độ lệch chuẩn
+                                </li>
+                                <li>
+                                    <strong>Mô phỏng Monte Carlo:</strong> 
+                                    Tạo nhiều kịch bản ngẫu nhiên
+                                </li>
+                            </ol>
+                            
+                            <h5 class="mt-3">Hạn chế của VaR</h5>
+                            <ul>
+                                <li>Không đo lường rủi ro đuôi</li>
+                                <li>Giả định phân phối chuẩn có thể không đúng</li>
+                                <li>Phụ thuộc vào dữ liệu lịch sử</li>
+                                <li>Khó tính toán với danh mục phức tạp</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <section id="financial-ratios">
-      <h2>6. Các Tỉ số Tài chính Doanh nghiệp</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Loại chỉ số</th>
-            <th>Chỉ số</th>
-            <th>Ý nghĩa</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Thanh khoản</td>
-            <td>Current Ratio, Quick Ratio</td>
-            <td>Đo khả năng trang trải nợ ngắn hạn</td>
-          </tr>
-          <tr>
-            <td>Đòn bẩy</td>
-            <td>Debt to Equity, Interest Coverage</td>
-            <td>Đánh giá mức vay nợ so với vốn</td>
-          </tr>
-          <tr>
-            <td>Hiệu quả</td>
-            <td>Inventory Turnover, Asset Turnover</td>
-            <td>Đo tốc độ luân chuyển tài sản</td>
-          </tr>
-          <tr>
-            <td>Sinh lời</td>
-            <td>ROA, ROE, ROS</td>
-            <td>Đánh giá hiệu quả sinh lời</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+        <!-- Cost Driver Section -->
+        <section id="cost-driver" class="py-5 bg-light">
+            <h2 class="section-title"><i class="fas fa-cogs me-2"></i>Cost Driver (Yếu tố Thúc đẩy Chi phí)</h2>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="indicator-box">
+                        <div class="indicator-icon">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <h3>Định nghĩa</h3>
+                        <p>Cost Driver là các yếu tố chính ảnh hưởng trực tiếp đến mức độ phát sinh và quy mô của chi phí trong hoạt động sản xuất kinh doanh của doanh nghiệp.</p>
+                        
+                        <h4 class="mt-4">Ví dụ điển hình</h4>
+                        <div class="row mt-3">
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5><i class="fas fa-industry me-2"></i>Sản xuất</h5>
+                                        <ul>
+                                            <li>Số giờ máy chạy</li>
+                                            <li>Số lượng sản phẩm</li>
+                                            <li>Số lần thiết lập máy</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5><i class="fas fa-truck me-2"></i>Logistics</h5>
+                                        <ul>
+                                            <li>Số lượng đơn hàng</li>
+                                            <li>Số lần vận chuyển</li>
+                                            <li>Khoảng cách vận chuyển</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5><i class="fas fa-users me-2"></i>Nhân sự</h5>
+                                        <ul>
+                                            <li>Số nhân viên</li>
+                                            <li>Số giờ làm việc</li>
+                                            <li>Số lượt đào tạo</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5><i class="fas fa-headset me-2"></i>Dịch vụ</h5>
+                                        <ul>
+                                            <li>Số cuộc gọi hỗ trợ</li>
+                                            <li>Số khiếu nại</li>
+                                            <li>Số lần bảo trì</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-project-diagram me-2"></i>Ứng dụng Cost Driver
+                        </div>
+                        <div class="card-body">
+                            <h5>Lợi ích chính</h5>
+                            <ul>
+                                <li>Phân bổ chi phí chính xác hơn</li>
+                                <li>Xác định cơ hội giảm chi phí</li>
+                                <li>Cải thiện định giá sản phẩm/dịch vụ</li>
+                                <li>Tối ưu hóa quy trình sản xuất</li>
+                                <li>Ra quyết định đầu tư hiệu quả</li>
+                            </ul>
+                            
+                            <h5 class="mt-4">Quy trình xác định Cost Driver</h5>
+                            <ol>
+                                <li>Phân tích các hoạt động trong doanh nghiệp</li>
+                                <li>Xác định chi phí liên quan đến từng hoạt động</li>
+                                <li>Tìm yếu tố ảnh hưởng lớn nhất đến chi phí</li>
+                                <li>Đo lường mối quan hệ giữa Cost Driver và chi phí</li>
+                                <li>Thiết lập hệ thống theo dõi và quản lý</li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container mt-4">
+                        <canvas id="costDriverChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-  </div>
+        <!-- Financial Metrics Section -->
+        <section id="metrics" class="py-5">
+            <h2 class="section-title"><i class="fas fa-calculator me-2"></i>Chỉ số Tài chính Doanh nghiệp Cần quan tâm</h2>
+            
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-list-ol me-2"></i>Phân loại chỉ số tài chính
+                        </div>
+                        <div class="card-body">
+                            <table class="comparison-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nhóm chỉ số</th>
+                                        <th>Chỉ số chính</th>
+                                        <th>Công thức</th>
+                                        <th>Ý nghĩa</th>
+                                        <th>Ngưỡng tốt</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Thanh khoản</td>
+                                        <td>Current Ratio</td>
+                                        <td>Tài sản ngắn hạn / Nợ ngắn hạn</td>
+                                        <td>Khả năng thanh toán nợ ngắn hạn</td>
+                                        <td>1.5 - 2.0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Thanh khoản</td>
+                                        <td>Quick Ratio</td>
+                                        <td>(Tiền + Khoản phải thu) / Nợ ngắn hạn</td>
+                                        <td>Khả năng thanh toán nhanh</td>
+                                        <td>1.0 - 1.5</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Hiệu suất</td>
+                                        <td>ROI</td>
+                                        <td>Lợi nhuận / Vốn đầu tư</td>
+                                        <td>Hiệu quả sử dụng vốn đầu tư</td>
+                                        <td> > 10%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Hiệu suất</td>
+                                        <td>ROE</td>
+                                        <td>Lợi nhuận ròng / Vốn chủ sở hữu</td>
+                                        <td>Hiệu quả sử dụng vốn chủ sở hữu</td>
+                                        <td> > 15%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Đòn bẩy</td>
+                                        <td>D/E</td>
+                                        <td>Nợ phải trả / Vốn chủ sở hữu</td>
+                                        <td>Mức độ sử dụng nợ vay</td>
+                                        <td> < 1.0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Hiệu quả</td>
+                                        <td>Inventory Turnover</td>
+                                        <td>Giá vốn hàng bán / Hàng tồn kho</td>
+                                        <td>Hiệu quả quản lý hàng tồn kho</td>
+                                        <td>Càng cao càng tốt</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header bg-success text-white">
+                            <i class="fas fa-tint me-2"></i>Chỉ số Thanh khoản
+                        </div>
+                        <div class="card-body">
+                            <p>Đo lường khả năng đáp ứng các nghĩa vụ tài chính ngắn hạn:</p>
+                            <ul>
+                                <li><strong>Current Ratio:</strong> Tỷ lệ thanh toán hiện hành</li>
+                                <li><strong>Quick Ratio:</strong> Tỷ lệ thanh toán nhanh</li>
+                                <li><strong>Cash Ratio:</strong> Tỷ lệ tiền mặt</li>
+                                <li><strong>Working Capital:</strong> Vốn lưu động</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header bg-info text-white">
+                            <i class="fas fa-chart-line me-2"></i>Chỉ số Hiệu suất
+                        </div>
+                        <div class="card-body">
+                            <p>Đánh giá hiệu quả sử dụng tài sản và vốn:</p>
+                            <ul>
+                                <li><strong>ROA:</strong> Lợi nhuận trên tài sản</li>
+                                <li><strong>ROE:</strong> Lợi nhuận trên vốn chủ sở hữu</li>
+                                <li><strong>ROI:</strong> Lợi nhuận trên đầu tư</li>
+                                <li><strong>ROS:</strong> Tỷ suất lợi nhuận doanh thu</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header bg-warning text-dark">
+                            <i class="fas fa-balance-scale me-2"></i>Chỉ số Đòn bẩy
+                        </div>
+                        <div class="card-body">
+                            <p>Đánh giá cấu trúc vốn và khả năng thanh toán nợ:</p>
+                            <ul>
+                                <li><strong>D/E Ratio:</strong> Tỷ lệ nợ trên vốn chủ</li>
+                                <li><strong>Debt Ratio:</strong> Tỷ lệ nợ trên tổng tài sản</li>
+                                <li><strong>Interest Coverage:</strong> Khả năng trả lãi</li>
+                                <li><strong>Debt Service Coverage:</strong> Khả năng trả nợ</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-  <footer>
-    <p>Cảm ơn các bạn đã lắng nghe – Q&amp;A</p>
-  </footer>
+        <!-- KPI Section -->
+        <section id="kpi" class="py-5 bg-light">
+            <h2 class="section-title"><i class="fas fa-key me-2"></i>Chỉ số Hiệu suất Chính (KPI)</h2>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card kpi-card">
+                        <div class="card-header">
+                            <i class="fas fa-bullseye me-2"></i>KPI trong Quản lý Tài chính
+                        </div>
+                        <div class="card-body">
+                            <h5>Định nghĩa</h5>
+                            <p>KPI (Key Performance Indicator) là các chỉ số đo lường hiệu suất quan trọng giúp đánh giá mức độ thành công trong việc đạt được mục tiêu tài chính của doanh nghiệp.</p>
+                            
+                            <h5 class="mt-4">Ví dụ KPI tài chính</h5>
+                            <ul>
+                                <li><strong>Lợi nhuận gộp:</strong> (Doanh thu - Giá vốn) / Doanh thu</li>
+                                <li><strong>Tỷ suất lợi nhuận ròng:</strong> Lợi nhuận ròng / Doanh thu</li>
+                                <li><strong>Vòng quay tài sản:</strong> Doanh thu / Tổng tài sản bình quân</li>
+                                <li><strong>Tỷ lệ nợ trên vốn chủ sở hữu:</strong> Tổng nợ / Vốn chủ sở hữu</li>
+                                <li><strong>Chu kỳ chuyển đổi tiền mặt:</strong> Chu kỳ hàng tồn kho + Chu kỳ phải thu - Chu kỳ phải trả</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="card kpi-card mt-4">
+                        <div class="card-header">
+                            <i class="fas fa-chart-line me-2"></i>Theo dõi KPI
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="kpiChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="card kpi-card">
+                        <div class="card-header">
+                            <i class="fas fa-lightbulb me-2"></i>Thiết lập KPI hiệu quả
+                        </div>
+                        <div class="card-body">
+                            <h5>Nguyên tắc SMART</h5>
+                            <ul>
+                                <li><strong>S - Specific:</strong> Cụ thể, rõ ràng</li>
+                                <li><strong>M - Measurable:</strong> Có thể đo lường</li>
+                                <li><strong>A - Achievable:</strong> Có thể đạt được</li>
+                                <li><strong>R - Relevant:</strong> Liên quan đến mục tiêu</li>
+                                <li><strong>T - Time-bound:</strong> Có thời hạn rõ ràng</li>
+                            </ul>
+                            
+                            <h5 class="mt-4">Quy trình triển khai KPI</h5>
+                            <ol>
+                                <li>Xác định mục tiêu chiến lược</li>
+                                <li>Lựa chọn KPI phù hợp</li>
+                                <li>Thiết lập mục tiêu và ngưỡng</li>
+                                <li>Phân công trách nhiệm</li>
+                                <li>Đo lường và báo cáo định kỳ</li>
+                                <li>Điều chỉnh và cải tiến</li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <div class="card kpi-card mt-4">
+                        <div class="card-header">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Thách thức khi triển khai KPI
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>Lựa chọn KPI không phù hợp với mục tiêu</li>
+                                <li>Thiếu dữ liệu để đo lường chính xác</li>
+                                <li>Không liên kết KPI với phần thưởng/phạt</li>
+                                <li>Quá nhiều KPI gây phân tán nguồn lực</li>
+                                <li>Không điều chỉnh KPI khi mục tiêu thay đổi</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
+        <!-- OKR Section -->
+        <section id="okr" class="py-5">
+            <h2 class="section-title"><i class="fas fa-bullseye me-2"></i>Mục tiêu và Kết quả then chốt (OKR)</h2>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card okr-card">
+                        <div class="card-header">
+                            <i class="fas fa-rocket me-2"></i>Giới thiệu về OKR
+                        </div>
+                        <div class="card-body">
+                            <h5>Định nghĩa</h5>
+                            <p>OKR (Objectives and Key Results) là phương pháp quản lý mục tiêu giúp liên kết hoạt động của cá nhân, phòng ban với mục tiêu chung của tổ chức.</p>
+                            
+                            <h5 class="mt-4">Cấu trúc OKR</h5>
+                            <div class="key-point">
+                                <strong>Objective (Mục tiêu):</strong> Định hướng rõ ràng, truyền cảm hứng<br>
+                                <strong>Key Results (Kết quả then chốt):</strong> Các kết quả đo lường được để đạt mục tiêu
+                            </div>
+                            
+                            <h5 class="mt-4">Ví dụ trong tài chính</h5>
+                            <p><strong>Objective:</strong> Tối ưu hóa dòng tiền hoạt động</p>
+                            <ul>
+                                <li>KR1: Giảm chu kỳ chuyển đổi tiền mặt từ 45 ngày xuống 30 ngày</li>
+                                <li>KR2: Tăng tỷ lệ thu hồi công nợ đúng hạn từ 75% lên 90%</li>
+                                <li>KR3: Giảm tồn kho trung bình từ 60 ngày xuống 45 ngày</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="card okr-card">
+                        <div class="card-header">
+                            <i class="fas fa-chart-pie me-2"></i>OKR Dashboard
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="okrChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card okr-card mt-4">
+                        <div class="card-header">
+                            <i class="fas fa-cogs me-2"></i>Lợi ích của OKR
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>Căn chỉnh toàn bộ tổ chức vào mục tiêu chung</li>
+                                <li>Tăng tính minh bạch trong tổ chức</li>
+                                <li>Tập trung vào các ưu tiên chiến lược</li>
+                                <li>Đo lường tiến độ rõ ràng, khách quan</li>
+                                <li>Khuyến khích sáng tạo và đột phá</li>
+                            </ul>
+                            
+                            <h5 class="mt-4">Sự khác biệt giữa KPI và OKR</h5>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th></th>
+                                    <th>KPI</th>
+                                    <th>OKR</th>
+                                </tr>
+                                <tr>
+                                    <td>Mục đích</td>
+                                    <td>Đo lường hiệu suất</td>
+                                    <td>Thiết lập và đạt mục tiêu</td>
+                                </tr>
+                                <tr>
+                                    <td>Tính chất</td>
+                                    <td>Chỉ số đo lường</td>
+                                    <td>Mục tiêu + Kết quả then chốt</td>
+                                </tr>
+                                <tr>
+                                    <td>Phạm vi</td>
+                                    <td>Thường cho cá nhân/phòng ban</td>
+                                    <td>Liên kết toàn tổ chức</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CRM Section -->
+        <section id="crm" class="py-5 bg-light">
+            <h2 class="section-title"><i class="fas fa-users me-2"></i>Quản lý Quan hệ Khách hàng (CRM)</h2>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card crm-card">
+                        <div class="card-header">
+                            <i class="fas fa-handshake me-2"></i>CRM và Tài chính Doanh nghiệp
+                        </div>
+                        <div class="card-body">
+                            <h5>Tác động của CRM đến Tài chính</h5>
+                            <p>Hệ thống CRM hiệu quả giúp cải thiện hiệu quả tài chính thông qua:</p>
+                            <ul>
+                                <li>Tăng tỷ lệ giữ chân khách hàng</li>
+                                <li>Giảm chi phí chăm sóc khách hàng</li>
+                                <li>Tăng giá trị trọn đời khách hàng (CLV)</li>
+                                <li>Cải thiện tỷ lệ chuyển đổi</li>
+                                <li>Tối ưu hóa chi phí marketing</li>
+                            </ul>
+                            
+                            <h5 class="mt-4">Chỉ số CRM quan trọng</h5>
+                            <ul>
+                                <li><strong>Tỷ lệ giữ chân khách hàng:</strong> (Số KH cuối kỳ - KH mới) / Số KH đầu kỳ</li>
+                                <li><strong>Chi phí thu hút khách hàng (CAC):</strong> Tổng chi phí marketing / Số KH mới</li>
+                                <li><strong>Giá trị trọn đời khách hàng (CLV):</strong> Doanh thu trung bình/KH × Tỷ lệ giữ chân / Tỷ lệ chiết khấu</li>
+                                <li><strong>Tỷ lệ CLV/CAC:</strong> Chỉ số hiệu quả đầu tư marketing</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="card crm-card">
+                        <div class="card-header">
+                            <i class="fas fa-chart-bar me-2"></i>Tác động của CRM đến Tài chính
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="crmImpactChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card crm-card mt-4">
+                        <div class="card-header">
+                            <i class="fas fa-calculator me-2"></i>Tính toán ROI cho CRM
+                        </div>
+                        <div class="card-body">
+                            <h5>Công thức tính ROI CRM</h5>
+                            <div class="formula-box">
+                                ROI CRM = (Lợi ích CRM - Chi phí CRM) / Chi phí CRM × 100%
+                            </div>
+                            
+                            <h5 class="mt-4">Lợi ích CRM</h5>
+                            <ul>
+                                <li>Tăng doanh thu từ khách hàng hiện tại</li>
+                                <li>Giảm chi phí chăm sóc khách hàng</li>
+                                <li>Tăng năng suất nhân viên kinh doanh</li>
+                                <li>Giảm tỷ lệ khách hàng rời bỏ</li>
+                                <li>Cải thiện tỷ lệ chuyển đổi</li>
+                            </ul>
+                            
+                            <!-- <div class="key-point">
+                                <i class="fas fa-info-circle me-2 text-primary"></i>
+                                Theo nghiên cứu, ROI trung bình của hệ thống CRM là $8.71 cho mỗi $1 đầu tư.
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize charts after page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // KRI Chart
+            const kriCtx = document.getElementById('kriChart').getContext('2d');
+            new Chart(kriCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Nợ xấu', 'Biến động tỷ giá', 'Thanh khoản', 'Tồn kho'],
+                    datasets: [{
+                        label: 'KRI (%)',
+                        data: [4.8, 7.2, 1.6, 8.5],
+                        backgroundColor: [
+                            'rgba(231, 76, 60, 0.7)',
+                            'rgba(52, 152, 219, 0.7)',
+                            'rgba(46, 204, 113, 0.7)',
+                            'rgba(155, 89, 182, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(231, 76, 60, 1)',
+                            'rgba(52, 152, 219, 1)',
+                            'rgba(46, 204, 113, 1)',
+                            'rgba(155, 89, 182, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Tỷ lệ %'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Sharpe Ratio Chart
+            const sharpeCtx = document.getElementById('sharpeChart').getContext('2d');
+            new Chart(sharpeCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                    datasets: [{
+                        label: 'Quỹ A',
+                        data: [1.2, 1.4, 1.5, 1.8],
+                        borderColor: 'rgba(46, 204, 113, 1)',
+                        backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }, {
+                        label: 'Quỹ B',
+                        data: [0.8, 0.9, 0.7, 0.9],
+                        borderColor: 'rgba(231, 76, 60, 1)',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }, {
+                        label: 'Thị trường',
+                        data: [1.0, 1.1, 1.0, 1.2],
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Sharpe Ratio'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // VaR Chart
+            const varCtx = document.getElementById('varChart').getContext('2d');
+            new Chart(varCtx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 21}, (_, i) => i - 10),
+                    datasets: [{
+                        label: 'Phân phối lợi nhuận',
+                        data: [1,2,3,5,8,12,17,22,28,34,38,34,28,22,17,12,8,5,3,2,1],
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        fill: true,
+                        tension: 0.1
+                    }, {
+                        label: 'VaR 95%',
+                        data: [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 17, 17, 17, 17, 17, 17],
+                        borderColor: 'rgba(231, 76, 60, 1)',
+                        borderDash: [5, 5],
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Xác suất'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Lợi nhuận (%)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Cost Driver Chart
+            const costDriverCtx = document.getElementById('costDriverChart').getContext('2d');
+            new Chart(costDriverCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Nguyên vật liệu', 'Nhân công', 'Máy móc', 'Năng lượng', 'Quản lý'],
+                    datasets: [{
+                        data: [35, 25, 15, 10, 15],
+                        backgroundColor: [
+                            'rgba(231, 76, 60, 0.7)',
+                            'rgba(52, 152, 219, 0.7)',
+                            'rgba(46, 204, 113, 0.7)',
+                            'rgba(155, 89, 182, 0.7)',
+                            'rgba(241, 196, 15, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(231, 76, 60, 1)',
+                            'rgba(52, 152, 219, 1)',
+                            'rgba(46, 204, 113, 1)',
+                            'rgba(155, 89, 182, 1)',
+                            'rgba(241, 196, 15, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+            
+            // KPI Chart
+            const kpiCtx = document.getElementById('kpiChart').getContext('2d');
+            new Chart(kpiCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Lợi nhuận gộp', 'Tỷ suất lợi nhuận ròng', 'Vòng quay tài sản', 'Tỷ lệ nợ/VCSH', 'Chu kỳ tiền mặt'],
+                    datasets: [{
+                        label: 'Kỳ hiện tại',
+                        data: [75, 65, 80, 50, 70],
+                        fill: true,
+                        backgroundColor: 'rgba(39, 174, 96, 0.2)',
+                        borderColor: 'rgba(39, 174, 96, 1)',
+                        pointBackgroundColor: 'rgba(39, 174, 96, 1)'
+                    }, {
+                        label: 'Kỳ trước',
+                        data: [60, 55, 70, 65, 55],
+                        fill: true,
+                        backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        pointBackgroundColor: 'rgba(52, 152, 219, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 100,
+                            ticks: {
+                                stepSize: 20
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // OKR Chart
+            const okrCtx = document.getElementById('okrChart').getContext('2d');
+            new Chart(okrCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Mục tiêu 1', 'Mục tiêu 2', 'Mục tiêu 3', 'Mục tiêu 4'],
+                    datasets: [{
+                        label: 'Tiến độ (%)',
+                        data: [75, 90, 60, 85],
+                        backgroundColor: 'rgba(243, 156, 18, 0.7)',
+                        borderColor: 'rgba(243, 156, 18, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Tỷ lệ hoàn thành (%)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // CRM Impact Chart
+            const crmImpactCtx = document.getElementById('crmImpactChart').getContext('2d');
+            new Chart(crmImpactCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Tăng doanh thu', 'Giảm chi phí', 'Tăng năng suất', 'Giảm KH rời bỏ'],
+                    datasets: [{
+                        label: 'Cải thiện (%)',
+                        data: [25, 18, 32, 22],
+                        backgroundColor: [
+                            'rgba(46, 204, 113, 0.7)',
+                            'rgba(231, 76, 60, 0.7)',
+                            'rgba(52, 152, 219, 0.7)',
+                            'rgba(155, 89, 182, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(46, 204, 113, 1)',
+                            'rgba(231, 76, 60, 1)',
+                            'rgba(52, 152, 219, 1)',
+                            'rgba(155, 89, 182, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Cải thiện (%)'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>
