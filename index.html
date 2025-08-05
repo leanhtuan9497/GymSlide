@@ -441,14 +441,14 @@
       </div>
 
       <!-- Slide 9: Lợi ích -->
-      <!-- <div class="slide">
+      <div class="slide">
         <h2>🌟 DEMO</h2>
 
         <div class="benefits-list">
           <div class="demo-item" demoType="cscb">
             <h4>Các chỉ số cần cho doanh nghiệp</h4>
             <p>Đo lường rủi ro, Hiệu suất & Kiểm soát Chi phí</p>
-            <a href="index2.html">Open demo</a>
+            <button onclick="newTab('FM')">Open demo</button>
           </div>
 
           <div class="demo-item" demoType="lp">
@@ -456,16 +456,16 @@
             <p>
               Trang chủ hiển thị, cung cấp các thông tin cơ bản đến khách hàng
             </p>
-            <a href="gymlife-master/index.html">Open demo</a>
+            <button onclick="newTab('LP')">Open demo</button>
           </div>
 
-          <div class="demo-item" emoType="ap">
+          <!-- <div class="demo-item" emoType="ap">
             <h4>Admin Page</h4>
             <p>Trang quản lý dành riêng cho doanh nghiệp</p>
-            <a href="argon-dashboard-tailwind-1.0.1/build/index.html">Open demo</a>
-          </div>
+            <button onclick="newTab('AP')">Open demo</button>
+          </div> -->
         </div>
-      </div> -->
+      </div>
 
       <!-- Slide 10: Chi phí triển khai -->
       <div class="slide">
@@ -497,14 +497,14 @@
             </tr>
             <tr>
               <td>Bảo trì hàng năm</td>
-              <td>Thỏa thuận</td>
+              <td>Thỏa thuận sau khi ký hợp đồng</td>
               <td>Cập nhật và hỗ trợ kỹ thuật</td>
             </tr>
           </tbody>
         </table>
 
         <br />
-        <p><strong>Tổng đầu tư ban đầu:</strong> 210-420 triệu VNĐ</p>
+        <p><strong>Tổng đầu tư ban đầu:</strong> 220-460 triệu VNĐ</p>
         <p><strong>ROI dự kiến:</strong> 12-18 tháng</p>
       </div>
 
@@ -549,6 +549,23 @@
       let currentSlide = 0;
       const slides = document.querySelectorAll(".slide");
       const totalSlides = slides.length;
+
+      function newTab(type) {
+        switch (type) {
+          case "FM":
+            window.open('https://leanhtuan9497.github.io/finance-management/');
+            break;
+          case "LP":
+            window.open('https://leanhtuan9497.github.io/landing-page-gym/');
+            break;
+          // case "AP":
+          //   window.open('https://leanhtuan9497.github.io/finance-management/');
+          //   break;
+
+          default:
+            break;
+        }
+      }
 
       document.getElementById("total-slides").textContent = totalSlides;
       document.getElementById("current-date").textContent =
